@@ -21,3 +21,7 @@ $(BENCHES):
 test:
 	@echo "Runing rust test ..."
 	@$(CARGO) test
+
+build:
+	@echo "Build🔧..."
+	@$(CARGO) build --release
