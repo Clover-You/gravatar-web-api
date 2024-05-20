@@ -3,7 +3,7 @@ use axum_valid::Valid;
 use reqwest::RequestBuilder;
 use serde::Deserialize;
 use sha2::{Digest, Sha256};
-use std::net::SocketAddr;
+use std::{env, error::Error, net::SocketAddr};
 use validator::Validate;
 
 mod gravatar;
@@ -14,7 +14,10 @@ mod web;
 const AUTHOR: &'static str = "Clover You";
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn Error>> {
+  // load env profile
+  dotenv::dotenv()?;
+
   // build our application with a single route.
   let app = Router::new();
 
@@ -23,12 +26,18 @@ async fn main() {
 
   let app = app.nest("/user", user_routers);
 
+  // read the start port from the .env profile, if it is undefined, use 3000 as the default port.
+  let srv_port = env::var("port").unwrap_or("3000".to_string());
+  let srv_port: u16 = srv_port.parse().unwrap_or(3000);
+
   // run our app with hyper, listener globally on poer 3000
-  let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-  let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+  let addr = SocketAddr::from(([127, 0, 0, 1], srv_port));
+  let listener = tokio::net::TcpListener::bind(addr).await?;
 
   println!("{} ===>> server start in the port {}", AUTHOR, addr.port());
-  axum::serve(listener, app).await.unwrap();
+  axum::serve(listener, app).await?;
+
+  Ok(())
 }
 
 #[derive(Debug, Deserialize, Validate)]
@@ -63,7 +72,7 @@ async fn get_user_info_by_gravatar(query: Valid<Query<QueryGravatarParams>>) -> 
   let resp_status = response.status();
 
   // get response text from request result
-  let data: Result<String, reqwest::Error> = response.text().await;
+  let data: reqwest::Result<String> = response.text().await;
   let data = data.as_ref();
 
   if let Err(err) = data {
