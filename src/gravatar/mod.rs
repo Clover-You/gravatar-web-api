@@ -2,7 +2,7 @@ use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::serde_visitor::bool_form_string::StringOrBoolVisitor;
 
-pub const GRAVATAR_URL: &'static str = "https://gravatar.com/";
+pub const GRAVATAR_URL: &str = "https://gravatar.com/";
 
 #[derive(Deserialize, Debug, Serialize)]
 pub struct GravatarEntry {

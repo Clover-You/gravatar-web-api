@@ -6,7 +6,7 @@ use axum::Router;
 use std::{env, error::Error, net::SocketAddr};
 
 // this project author name
-const AUTHOR: &'static str = "Clover You";
+const AUTHOR: &str = "Clover You";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {

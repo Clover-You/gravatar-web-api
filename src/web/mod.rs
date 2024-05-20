@@ -14,8 +14,5 @@ pub struct ApiRep<T> {
 
 /// create a quick result
 pub fn create_api_rep_with_none<T>(msg: String, data: Option<T>) -> ApiRep<Option<T>> {
-  ApiRep {
-    message: msg,
-    data: data,
-  }
+  ApiRep { message: msg, data }
 }

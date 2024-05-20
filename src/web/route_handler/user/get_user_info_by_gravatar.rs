@@ -45,7 +45,7 @@ pub async fn get_user_info_by_gravatar(
   let data = data.as_ref();
 
   if let Err(err) = data {
-    println!("err msg = {}", err.to_string());
+    println!("err msg = {}", err);
     return Json(create_api_rep_with_none("system error".to_string(), None));
   }
 
@@ -64,7 +64,7 @@ pub async fn get_user_info_by_gravatar(
   let form_str: serde_json::Result<gravatar::GravatarEntry> = serde_json::from_str(data.as_str());
 
   if let Err(err) = form_str {
-    println!("err msg = {}", err.to_string());
+    println!("err msg = {}", err);
     return Json(create_api_rep_with_none("system error".to_string(), None));
   }
 
@@ -81,7 +81,7 @@ fn build_gravatar_info_request(hash: &str) -> RequestBuilder {
   let json_url = format!("{}{}.json", gravatar::GRAVATAR_URL, hash);
 
   let request = reqwest::Client::builder().build().unwrap();
-  let request = request.get(&json_url);
+  let request = request.get(json_url);
 
   request.header("User-Agent", "rust api")
 }
