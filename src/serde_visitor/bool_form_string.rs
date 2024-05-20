@@ -1,3 +1,4 @@
+/// 自定义转换器 bool str -->> bool
 pub struct StringOrBoolVisitor;
 
 impl<'de> serde::de::Visitor<'de> for StringOrBoolVisitor {
